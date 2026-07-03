@@ -14,7 +14,7 @@ from fastapi.responses import JSONResponse
 from app.config import settings
 from app.database import init_db
 from app.data.seed import seed_all
-from app.routers import parse, risk, templates, generate
+from app.routers import parse, risk, templates, generate, chat, polish
 
 # 日志配置
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
@@ -51,6 +51,8 @@ app.include_router(parse.router, prefix="/api", tags=["需求解析"])
 app.include_router(risk.router, prefix="/api", tags=["风险预审"])
 app.include_router(templates.router, prefix="/api", tags=["模板与条款"])
 app.include_router(generate.router, prefix="/api", tags=["文档生成"])
+app.include_router(chat.router, prefix="/api", tags=["AI 顾问"])
+app.include_router(polish.router, prefix="/api", tags=["文档润色"])
 
 
 @app.on_event("startup")

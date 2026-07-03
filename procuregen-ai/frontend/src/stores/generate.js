@@ -3,7 +3,6 @@ import { ref } from 'vue'
 import api from '../api'
 
 export const useGenerateStore = defineStore('generate', () => {
-  // 当前步骤：0=输入, 1=解析结果, 2=风险报告, 3=预览下载
   const currentStep = ref(0)
   const inputText = ref('')
   const parsedSpec = ref(null)
@@ -11,16 +10,20 @@ export const useGenerateStore = defineStore('generate', () => {
   const selectedClauses = ref([])
   const generateResult = ref(null)
   const loading = ref(false)
+  const loadingStatus = ref('processing')
 
-  // 步骤 1：解析需求
+  // 流式输出相关
+  const streamingText = ref('')
+  const isStreaming = ref(false)
+
+  // 步骤 1：传统解析
   async function doParse() {
-    if (!inputText.value.trim()) return
-    loading.value = true
+    if (!inputText.value.trim() || loading.value) return
+    loading.value = true; loadingStatus.value = 'parsing'
     try {
       const res = await api.post('/parse', { input_text: inputText.value, mode: 'llm' })
       if (res.success) {
         parsedSpec.value = res.data
-        // 同时保存原始输入
         parsedSpec.value._input_text = inputText.value
         currentStep.value = 1
       }
@@ -29,10 +32,72 @@ export const useGenerateStore = defineStore('generate', () => {
     }
   }
 
+  // 步骤 1b：流式解析（SSE 逐 token 推送）
+  async function doParseStream() {
+    if (!inputText.value.trim() || loading.value) return
+    isStreaming.value = true; streamingText.value = ''; loading.value = true; loadingStatus.value = 'parsing'
+
+    try {
+      const url = `/api/parse-stream?input_text=${encodeURIComponent(inputText.value)}`
+      const eventSource = new EventSource(url)
+
+      return new Promise((resolve, reject) => {
+        eventSource.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data)
+            if (data.done) {
+              eventSource.close()
+              isStreaming.value = false
+              loading.value = false
+              // 尝试解析完整 JSON
+              const json = extractJson(data.full)
+              if (json) {
+                parsedSpec.value = json
+                parsedSpec.value._input_text = inputText.value
+                currentStep.value = 1
+              }
+              resolve()
+            } else if (data.token) {
+              streamingText.value += data.token
+            }
+          } catch (e) { /* ignore parse errors */ }
+        }
+        eventSource.onerror = () => {
+          eventSource.close()
+          isStreaming.value = false
+          loading.value = false
+          // 降级到传统解析
+          doParse()
+          resolve()
+        }
+        setTimeout(() => {
+          if (isStreaming.value) {
+            eventSource.close()
+            isStreaming.value = false
+            loading.value = false
+            doParse()
+            resolve()
+          }
+        }, 30000)
+      })
+    } catch {
+      isStreaming.value = false
+      loading.value = false
+      doParse()
+    }
+  }
+
+  function extractJson(text) {
+    try { return JSON.parse(text) } catch {}
+    const m = text.match(/\{[\s\S]*\}/)
+    if (m) { try { return JSON.parse(m[0]) } catch {} }
+    return null
+  }
+
   // 步骤 2：风险预审
   async function doRiskCheck() {
-    if (!parsedSpec.value) return
-    loading.value = true
+    if (!parsedSpec.value || loading.value) return
+    loading.value = true; loadingStatus.value = 'risk'
     try {
       const res = await api.post('/risk-check', {
         parsed_spec: parsedSpec.value,
@@ -50,8 +115,8 @@ export const useGenerateStore = defineStore('generate', () => {
 
   // 步骤 3：生成文档
   async function doGenerate() {
-    if (!parsedSpec.value) return
-    loading.value = true
+    if (!parsedSpec.value || loading.value) return
+    loading.value = true; loadingStatus.value = 'generating'
     try {
       const res = await api.post('/generate', {
         parsed_spec: parsedSpec.value,
@@ -82,6 +147,9 @@ export const useGenerateStore = defineStore('generate', () => {
     selectedClauses.value = []
     generateResult.value = null
     loading.value = false
+    streamingText.value = ''
+    isStreaming.value = false
+    loadingStatus.value = 'processing'
   }
 
   // 修改解析字段
@@ -93,8 +161,9 @@ export const useGenerateStore = defineStore('generate', () => {
 
   return {
     currentStep, inputText, parsedSpec, riskReport,
-    selectedClauses, generateResult, loading,
-    doParse, doRiskCheck, doGenerate, getDownloadUrl,
+    selectedClauses, generateResult, loading, loadingStatus,
+    streamingText, isStreaming,
+    doParse, doParseStream, doRiskCheck, doGenerate, getDownloadUrl,
     reset, updateField
   }
 })

@@ -47,6 +47,62 @@ class LLMAdapter:
             self.mode = "mock"
             return self._mock_response(user_prompt)
 
+    def stream_llm(self, system_prompt: str, user_prompt: str):
+        """流式调用 DeepSeek，逐 token yield。Mock 模式模拟逐字输出。"""
+        if self.mode == "mock":
+            text = self._mock_response(user_prompt)
+            for i in range(0, len(text), 3):
+                yield text[i:i+3]
+            return
+
+        url = f"{settings.DEEPSEEK_BASE_URL.rstrip('/')}/chat/completions"
+        headers = {
+            "Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}",
+            "Content-Type": "application/json",
+        }
+        body = {
+            "model": settings.DEEPSEEK_MODEL,
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_prompt},
+            ],
+            "temperature": 0.1,
+            "max_tokens": 4096,
+            "stream": True,
+        }
+        try:
+            with httpx.Client(timeout=90) as client:
+                with client.stream("POST", url, headers=headers, json=body) as resp:
+                    if resp.status_code != 200:
+                        self.mode = "mock"
+                        text = self._mock_response(user_prompt)
+                        for i in range(0, len(text), 3):
+                            yield text[i:i+3]
+                        return
+                    for line in resp.iter_lines():
+                        line = line.strip()
+                        if line.startswith("data: "):
+                            data = line[6:]
+                            if data == "[DONE]":
+                                return
+                            try:
+                                chunk = json.loads(data)
+                                delta = chunk["choices"][0].get("delta", {})
+                                content = delta.get("content", "")
+                                if content:
+                                    yield content
+                            except (json.JSONDecodeError, KeyError, IndexError):
+                                continue
+        except Exception as e:
+            print(f"[LLM] 流式调用失败: {e}")
+            self.mode = "mock"
+            text = self._mock_response(user_prompt)
+            for i in range(0, len(text), 3):
+                yield text[i:i+3]
+            print(f"[LLM] API 调用失败，降级至 Mock 模式: {e}")
+            self.mode = "mock"
+            return self._mock_response(user_prompt)
+
     def _mock_response(self, user_prompt: str) -> str:
         """Mock 模式返回样例 JSON，保证无 API Key 也能演示。"""
         return json.dumps({

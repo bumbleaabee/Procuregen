@@ -23,8 +23,8 @@
       </div>
     </div>
     <div class="step-actions">
-      <button class="apple-btn apple-btn-secondary" @click="store.reset()">重新输入</button>
-      <button class="apple-btn apple-btn-primary" @click="store.doRiskCheck()" style="padding:12px 24px;font-size:15px;">
+      <button class="apple-btn apple-btn-secondary" @click="store.reset()" :disabled="store.loading">重新输入</button>
+      <button class="apple-btn apple-btn-primary" @click="store.doRiskCheck()" :disabled="store.loading" style="padding:12px 24px;font-size:15px;">
         下一步：风险预审
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polyline points="9 18 15 12 9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
