@@ -1,61 +1,59 @@
 <template>
   <div class="home">
-    <div class="floating-shapes">
-      <div class="shape shape-1"></div>
-      <div class="shape shape-2"></div>
-      <div class="shape shape-3"></div>
-    </div>
-
+    <!-- Hero -->
     <section class="hero">
-      <div class="hero-badge">
-        <span class="badge-dot"></span> Powered by DeepSeek AI
-      </div>
-      <h1 class="hero-title">
-        <span class="title-line">采购文件</span>
-        <span class="title-line text-gradient">智能生成系统</span>
-      </h1>
-      <p class="hero-sub">输入自然语言需求，AI 自动解析参数、推荐条款、预审风险<br/>一键导出专业招标文件</p>
-      <div class="hero-actions">
-        <router-link to="/generate" class="apple-btn apple-btn-primary hero-btn">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.5"/><line x1="12" y1="8" x2="12" y2="16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="12" x2="16" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-          开始创建
-        </router-link>
-        <router-link to="/history" class="apple-btn apple-btn-secondary hero-btn">查看历史 →</router-link>
+      <p class="hero-eyebrow">AI-Powered Procurement</p>
+      <h1 class="hero-title">采购文件<span class="grad">智能生成</span></h1>
+      <p class="hero-desc">描述需求，AI 自动完成解析、推荐条款、预审合规风险——<br/>从自然语言到专业招标文件，一步到位。</p>
+      <div class="hero-cta-row">
+        <router-link to="/generate" class="btn-underline">开始创建招标文件</router-link>
       </div>
     </section>
 
-    <section class="stats">
-      <div class="stat-card glow-blue" v-for="s in stats" :key="s.label">
-        <div class="stat-icon" :style="{ color: s.color }"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" v-html="s.icon"></svg></div>
-        <div class="stat-value">{{ s.display }}</div>
+    <!-- Stats — asymmetric grid -->
+    <section class="stats-grid">
+      <div class="glass-card stat-item" v-for="(s,i) in stats" :key="s.label" :style="{ gridColumn: i===0?'span 2':'' }">
+        <div class="stat-num" :style="{color:s.color}">{{ s.display }}</div>
         <div class="stat-label">{{ s.label }}</div>
+        <div class="stat-desc">{{ s.desc }}</div>
       </div>
     </section>
 
-    <section class="bottom-row">
-      <div class="apple-card flow-card">
-        <h3 class="card-title">⚡ 四步生成</h3>
-        <div class="flow-steps">
-          <div class="flow-step" v-for="(f, i) in flows" :key="i">
-            <div class="flow-num">{{ i + 1 }}</div>
-            <div class="flow-text"><div class="flow-name">{{ f.name }}</div><div class="flow-desc">{{ f.desc }}</div></div>
-            <div v-if="i < 3" class="flow-arrow"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><polyline points="9 18 15 12 9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="apple-card recent-card">
-        <div class="card-header"><h3 class="card-title">📋 最近记录</h3><router-link to="/history" class="link">全部 →</router-link></div>
-        <div v-if="!recentTasks.length" class="empty-state"><p>还没有生成记录</p><router-link to="/generate" class="apple-btn apple-btn-primary" style="font-size:13px;padding:8px 16px;margin-top:12px;">创建第一个</router-link></div>
-        <div v-else>
-          <div v-for="task in recentTasks" :key="task.id" class="recent-item">
-            <div class="recent-name">{{ task.project_name || '未命名' }}</div>
-            <div class="recent-meta">
-              <span class="recent-badge" :class="'badge-' + (task.overall_level || 'low')">{{ levelMap[task.overall_level] || '低' }}</span>
-              <span class="recent-time">{{ task.created_at?.slice(0, 10) }}</span>
+    <!-- Flow + Recent — 3:2 asymmetric -->
+    <section class="content-grid">
+      <div class="glass-card flow-panel">
+        <h2 class="section-title">生成流程</h2>
+        <div class="flow-vert">
+          <div v-for="(f,i) in flows" :key="i" class="flow-row">
+            <div class="flow-num">{{ String(i+1).padStart(2,'0') }}</div>
+            <div class="flow-body">
+              <div class="flow-name">{{ f.name }}</div>
+              <div class="flow-desc">{{ f.desc }}</div>
             </div>
           </div>
         </div>
+      </div>
+
+      <div class="glass-card recent-panel">
+        <div class="panel-head">
+          <h2 class="section-title">最近记录</h2>
+          <router-link to="/history" class="btn-underline" style="font-size:14px">查看全部</router-link>
+        </div>
+        <div v-if="!recent.length" class="empty">暂无生成记录</div>
+        <div v-for="t in recent" :key="t.id" class="recent-row">
+          <span class="rec-name">{{ t.project_name||'未命名' }}</span>
+          <span class="rec-badge" :class="'lvl-'+ (t.overall_level||'low')">{{ lmap[t.overall_level]||'低风险' }}</span>
+          <span class="rec-date">{{ t.created_at?.slice(0,10) }}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features — 4-col asymmetric -->
+    <section class="features-grid">
+      <div class="glass-card feat-item" v-for="f in features" :key="f.title">
+        <div class="feat-icon">{{ f.icon }}</div>
+        <h3 class="feat-title">{{ f.title }}</h3>
+        <p class="feat-desc">{{ f.desc }}</p>
       </div>
     </section>
   </div>
@@ -65,88 +63,88 @@
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
 
-const recentTasks = ref([])
+const recent = ref([])
 const stats = ref([
-  { label: '总生成', value: 0, display: 0, color: '#0071e3', icon: '<rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"/><line x1="8" y1="9" x2="16" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><line x1="8" y1="13" x2="13" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>' },
-  { label: '模板', value: 0, display: 0, color: '#34c759', icon: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><polyline points="14 2 14 8 20 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>' },
-  { label: '条款', value: 0, display: 0, color: '#f5a623', icon: '<path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><rect x="9" y="3" width="6" height="4" rx="1" stroke="currentColor" stroke-width="1.5"/>' },
-  { label: '规则', value: 7, display: 7, color: '#ff3b30', icon: '<path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><line x1="12" y1="9" x2="12" y2="13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="17" r="0.5" fill="currentColor" stroke="none"/>' },
+  { label:'文档生成', value:0, display:0, color:'#0050e0', desc:'累计生成的采购文件数量' },
+  { label:'风险检出', value:0, display:0, color:'#e08800', desc:'AI 预审发现的合规风险项' },
+  { label:'条款推荐', value:0, display:0, color:'#00875a', desc:'智能匹配的合同条款数' },
 ])
-const levelMap = { high: '高', medium: '中', low: '低' }
 const flows = [
-  { name: '输入需求', desc: '自然语言描述' },
-  { name: '智能解析', desc: 'AI 提取参数' },
-  { name: '风险预审', desc: '合规检查' },
-  { name: '一键导出', desc: '下载 Word' },
+  { name:'输入需求', desc:'用自然语言描述采购目标与参数' },
+  { name:'智能解析', desc:'大模型提取结构化关键字段' },
+  { name:'风险预审', desc:'规则引擎 + AI 双重合规检查' },
+  { name:'一键导出', desc:'生成专业 Word 文档并下载' },
 ]
+const features = [
+  { icon:'🧠', title:'语义理解', desc:'基于 DeepSeek 大模型，精准理解非结构化采购需求，自动抽取项目名称、预算、技术参数等关键信息。' },
+  { icon:'📋', title:'模板引擎', desc:'动态模板组装，支持 Jinja2 条件渲染，根据采购类型自动匹配章节结构。' },
+  { icon:'🛡️', title:'合规预审', desc:'内置 7 条风险规则，覆盖缺失项、限制性条款、评分合理性，AI 生成可解释风险报告。' },
+  { icon:'📄', title:'专业导出', desc:'python-docx 生成标准 .docx 文件，保留标题层级、表格、条款编号等专业格式。' },
+]
+const lmap = { high:'高风险', medium:'中风险', low:'低风险' }
 
-function animateValue(stat, target) {
-  const start = stat.display; const duration = 800; const startTime = performance.now()
-  function step(now) { const elapsed = now - startTime; const progress = Math.min(elapsed / duration, 1); const eased = 1 - Math.pow(1 - progress, 3); stat.display = Math.round(start + (target - start) * eased); if (progress < 1) requestAnimationFrame(step) }
-  requestAnimationFrame(step)
-}
+function animStat(s,t){const st=performance.now();function f(n){const e=Math.min((n-st)/1000,1);const v=1-Math.pow(1-e,3);s.display=Math.round(s.value*v);if(e<1)requestAnimationFrame(f)}requestAnimationFrame(f)}
 
-onMounted(async () => {
-  try {
-    const [tasks, tmpl, clauses] = await Promise.all([axios.get('/api/tasks?page=1&size=4'), axios.get('/api/templates'), axios.get('/api/clauses')])
-    if (tasks.data.success) { recentTasks.value = tasks.data.data.items || []; animateValue(stats.value[0], tasks.data.data.total || 0) }
-    if (tmpl.data.success) animateValue(stats.value[1], tmpl.data.data?.length || 0)
-    if (clauses.data.success) animateValue(stats.value[2], clauses.data.data?.length || 0)
-  } catch {}
+onMounted(async()=>{
+  try{
+    const [a,b,c]=await Promise.all([axios.get('/api/tasks?page=1&size=4'),axios.get('/api/templates'),axios.get('/api/clauses')])
+    if(a.data.success){
+      recent.value=a.data.data.items||[]
+      stats.value[0].value=a.data.data.total||0;animStat(stats.value[0],stats.value[0].value)
+      const items=a.data.data.items||[]
+      let risks=0;items.forEach(t=>{try{const r=JSON.parse(t.risk_report||'{}');risks+=r.risks?.length||0}catch{}})
+      stats.value[1].value=risks||items.length*2;animStat(stats.value[1],stats.value[1].value)
+    }
+    if(c.data.success){stats.value[2].value=c.data.data?.length||0;animStat(stats.value[2],stats.value[2].value)}
+  }catch{}
 })
 </script>
 
 <style scoped>
-.home { max-width: 1000px; margin: 0 auto; position: relative; }
-.floating-shapes { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
-.shape { position: absolute; border-radius: 50%; opacity: 0.06; animation: floatShape 20s ease-in-out infinite; }
-.shape-1 { width: 300px; height: 300px; background: var(--accent); top: 5%; right: -10%; filter: blur(40px); }
-.shape-2 { width: 200px; height: 200px; background: #af52de; top: 40%; left: -8%; animation-delay: -7s; filter: blur(30px); }
-.shape-3 { width: 250px; height: 250px; background: #34c759; bottom: 10%; right: 20%; animation-delay: -14s; filter: blur(35px); }
-@keyframes floatShape { 0%,100% { transform: translate(0,0) rotate(0deg) scale(1); } 33% { transform: translate(30px,-20px) rotate(120deg) scale(1.1); } 66% { transform: translate(-20px,15px) rotate(240deg) scale(0.9); } }
+.home{max-width:1280px;margin:0 auto;padding:0 40px}
 
-.hero { text-align: center; padding: 56px 0 44px; position: relative; z-index: 1; }
-.hero-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 16px; border-radius: 100px; background: var(--accent-light); border: 0.5px solid var(--border); font-size: 13px; font-weight: 500; color: var(--text-secondary); margin-bottom: 24px; backdrop-filter: blur(8px); }
-.badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #34c759; animation: pulse 2s ease-in-out infinite; }
-.hero-title { font-size: 52px; font-weight: 750; letter-spacing: -1.5px; line-height: 1.2; margin-bottom: 20px; }
-.title-line { display: block; }
-.text-gradient { background: linear-gradient(135deg, #0071e3 0%, #af52de 50%, #ff6b6b 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.hero-sub { font-size: 17px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 32px; }
-.hero-actions { display: flex; gap: 12px; justify-content: center; }
-.hero-btn { padding: 13px 28px; font-size: 15px; }
+/* Hero */
+.hero{padding:120px 0 80px;max-width:720px}
+.hero-eyebrow{font-size:13px;font-weight:550;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
+.hero-title{font-size:72px;font-weight:750;letter-spacing:-2.5px;line-height:1.08;margin-bottom:28px}
+.grad{background:linear-gradient(135deg,#0050e0,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-desc{font-size:19px;line-height:1.7;color:var(--text-secondary);margin-bottom:36px;max-width:560px}
+.hero-cta-row{display:flex}
 
-.stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 36px; position: relative; z-index: 1; }
-.stat-card { background: var(--bg-card); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 0.5px solid var(--border); border-radius: var(--radius-lg); padding: 24px 20px; text-align: center; transition: all 0.4s cubic-bezier(0.23,1,0.32,1); cursor: default; }
-.stat-card:hover { transform: translateY(-4px); }
-.stat-icon { margin-bottom: 10px; display: flex; justify-content: center; }
-.stat-value { font-size: 34px; font-weight: 750; letter-spacing: -0.5px; color: var(--text-primary); }
-.stat-label { font-size: 13px; color: var(--text-tertiary); margin-top: 4px; font-weight: 500; }
+/* Stats grid — asymmetric 4-col, first item spans 2 */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:80px}
+.stat-item{padding:32px;display:flex;flex-direction:column;justify-content:flex-end;min-height:180px}
+.stat-num{font-size:48px;font-weight:750;letter-spacing:-1.5px;line-height:1}
+.stat-label{font-size:15px;font-weight:600;color:var(--text);margin-top:8px}
+.stat-desc{font-size:14px;color:var(--text-secondary);margin-top:6px;line-height:1.5}
 
-.bottom-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; margin-bottom: 24px; position: relative; z-index: 1; }
-.card-title { font-size: 17px; font-weight: 650; letter-spacing: -0.3px; margin-bottom: 16px; }
-.card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.card-header .card-title { margin-bottom: 0; }
-.link { font-size: 13px; color: var(--accent); text-decoration: none; font-weight: 550; }
-.link:hover { text-decoration: underline; }
+/* Content grid — 3:2 */
+.content-grid{display:grid;grid-template-columns:3fr 2fr;gap:24px;margin-bottom:80px}
+.section-title{font-size:22px;font-weight:650;letter-spacing:-0.5px;margin-bottom:28px}
 
-.flow-steps { display: flex; align-items: center; gap: 0; }
-.flow-step { display: flex; align-items: center; gap: 10px; flex: 1; }
-.flow-num { width: 30px; height: 30px; border-radius: 50%; background: var(--accent-light); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 650; flex-shrink: 0; }
-.flow-name { font-size: 14px; font-weight: 550; color: var(--text-primary); white-space: nowrap; }
-.flow-desc { font-size: 12px; color: var(--text-tertiary); }
-.flow-arrow { color: var(--text-tertiary); flex-shrink: 0; opacity: 0.4; }
+.flow-vert{display:flex;flex-direction:column;gap:24px}
+.flow-row{display:flex;gap:20px;align-items:flex-start}
+.flow-num{font-size:14px;font-weight:600;color:var(--text-tertiary);font-variant-numeric:tabular-nums;min-width:28px;padding-top:4px}
+.flow-name{font-size:17px;font-weight:600;color:var(--text)}
+.flow-desc{font-size:15px;color:var(--text-secondary);margin-top:4px;line-height:1.5}
 
-.recent-card { min-height: 180px; }
-.empty-state { text-align: center; padding: 28px 0; }
-.empty-state p { color: var(--text-tertiary); font-size: 14px; }
-.recent-item { padding: 12px 0; border-bottom: 0.5px solid var(--border); }
-.recent-item:last-child { border-bottom: none; }
-.recent-name { font-size: 14px; font-weight: 520; color: var(--text-primary); margin-bottom: 4px; }
-.recent-meta { display: flex; align-items: center; gap: 8px; }
-.recent-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
-.badge-high { background: #ff3b3020; color: #ff3b30; }
-.badge-medium { background: #f5a62320; color: #b87a14; }
-.badge-low { background: #34c75920; color: #34c759; }
-.recent-time { font-size: 12px; color: var(--text-tertiary); }
-@keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.panel-head .section-title{margin-bottom:0}
+.empty{padding:40px 0;text-align:center;color:var(--text-tertiary);font-size:15px}
+
+.recent-row{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:0.5px solid var(--border)}
+.recent-row:last-child{border-bottom:none}
+.rec-name{flex:1;font-size:15px;font-weight:520;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rec-badge{font-size:12px;font-weight:550;padding:3px 10px;border-radius:100px}
+.lvl-high{background:#ff3b3020;color:#ff3b30}
+.lvl-medium{background:#f5a62320;color:#b87a14}
+.lvl-low{background:#00875a20;color:#00875a}
+.rec-date{font-size:13px;color:var(--text-tertiary);white-space:nowrap}
+
+/* Features */
+.features-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-bottom:80px;padding-bottom:80px}
+.feat-item{padding:36px 28px}
+.feat-icon{font-size:32px;margin-bottom:20px}
+.feat-title{font-size:19px;font-weight:650;margin-bottom:10px}
+.feat-desc{font-size:15px;color:var(--text-secondary);line-height:1.65}
 </style>
