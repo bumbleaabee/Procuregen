@@ -80,7 +80,7 @@ const progress = computed(() => Math.min(currentMsg.value * 25 + 15, 90))
 }
 .loading-icon { margin-bottom: 20px; }
 .loading-status {
-  font-size: 15px; font-weight: 550; color: var(--text-primary);
+  font-size: 15px; font-weight: 550; color: var(--text);
   margin-bottom: 16px; letter-spacing: -0.2px; min-height: 22px;
 }
 .loading-dots { display: flex; justify-content: center; gap: 6px; margin-bottom: 20px; }

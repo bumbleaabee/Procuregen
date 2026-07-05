@@ -21,7 +21,7 @@ const style = computed(() => ({
 }))
 
 const glowStyle = computed(() => ({
-  background: `radial-gradient(circle at ${glowX.value}% ${glowY.value}%, var(--accent-light) 0%, transparent 60%)`,
+  background: `radial-gradient(circle at ${glowX.value}% ${glowY.value}%, var(--accent-ghost) 0%, transparent 60%)`,
 }))
 
 function onMove(e) {

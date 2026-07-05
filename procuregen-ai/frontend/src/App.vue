@@ -1,8 +1,6 @@
 <template>
-  <SplashScreen v-if="!ready" @done="ready=true" />
-  <Transition name="app-enter">
-    <div v-if="ready" class="root" :class="{ dark: isDark }" @scroll.passive="onScroll" ref="rootRef">
-    <!-- 导航栏：透明→实色滚动渐变 -->
+  <div class="root" :class="{ dark: isDark, 'is-landing': isLanding }" @scroll.passive="onScroll" ref="rootRef">
+    <!-- Navigation: transparent to solid on scroll -->
     <header class="nav" :class="{ scrolled: scrolled }">
       <div class="nav-inner">
         <router-link to="/" class="nav-brand" aria-label="首页">
@@ -34,10 +32,9 @@
     <LoadingOverlay :visible="busy" :status="sts" />
 
     <!-- 命令面板 -->
-    <Teleport to="body"><Transition name="cm"><div v-if="cmd" class="cmd-bg" @click.self="cmd=false"><div class="cmd-box"><div class="cmd-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input ref="ci" v-model="cq" class="cmd-in" placeholder="搜索命令…" @keydown.escape="cmd=false" @keydown.enter="goC"/></div><div class="cmd-l"><button v-for="(c,i) in fc" :key="i" class="cmd-it" @click="doC(c)"><span>{{c.label}}</span><kbd>{{c.key}}</kbd></button></div></div></div></Transition></Teleport>
+    <Teleport to="body"><Transition name="cm"><div v-if="cmd" class="cmd-bg" @click.self="cmd=false"><div class="cmd-box"><div class="cmd-h"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg><input ref="ci" v-model="cq" class="cmd-in" placeholder="Search commands..." @keydown.escape="cmd=false" @keydown.enter="goC"/></div><div class="cmd-l"><button v-for="(c,i) in fc" :key="i" class="cmd-it" @click="doC(c)"><span>{{c.label}}</span><kbd>{{c.key}}</kbd></button></div></div></div></Transition></Teleport>
     <KeyboardHelp :show="hlp" @close="hlp=false" />
   </div>
-  </Transition>
 </template>
 
 <script setup>
@@ -47,42 +44,42 @@ import { useTheme } from './composables/useTheme'
 import { useGenerateStore } from './stores/generate'
 import LoadingOverlay from './components/LoadingOverlay.vue'
 import KeyboardHelp from './components/KeyboardHelp.vue'
-import SplashScreen from './components/SplashScreen.vue'
 
-const ready = ref(!!localStorage.getItem('pw_v4'))
-const scrolled = ref(false)
-const rootRef = ref(null)
 const route = useRoute()
 const router = useRouter()
 const { isDark, toggle: toggleTheme } = useTheme()
 const gs = useGenerateStore()
 const busy = computed(() => gs.loading)
 const sts = computed(() => gs.loadingStatus)
+const scrolled = ref(false)
+const rootRef = ref(null)
+
+const isLanding = computed(() => route.path === '/')
 
 const mainNav = [
   { to:'/', label:'工作台' },
-  { to:'/generate', label:'新建' },
+  { to:'/generate', label:'新建文件' },
   { to:'/chat', label:'AI 顾问' },
-  { to:'/polish', label:'润色' },
-  { to:'/analytics', label:'分析' },
+  { to:'/polish', label:'文档润色' },
+  { to:'/analytics', label:'数据分析' },
   { to:'/knowledge', label:'知识库' },
-  { to:'/guide', label:'导览' },
-  { to:'/history', label:'历史' },
+  { to:'/guide', label:'流程导览' },
+  { to:'/history', label:'历史记录' },
 ]
 
 function onScroll() { scrolled.value = (rootRef.value?.scrollTop || 0) > 20 }
 
 const cmd=ref(false),cq=ref(''),ci=ref(null),hlp=ref(false)
 const all=[
-  {label:'新建采购文件',key:'⌘N',action:()=>router.push('/generate')},
-  {label:'AI 顾问',key:'⌘1',action:()=>router.push('/chat')},
-  {label:'文档润色',key:'⌘2',action:()=>router.push('/polish')},
-  {label:'数据分析',key:'⌘3',action:()=>router.push('/analytics')},
-  {label:'知识库',key:'⌘4',action:()=>router.push('/knowledge')},
-  {label:'流程导览',key:'⌘5',action:()=>router.push('/guide')},
-  {label:'历史记录',key:'⌘H',action:()=>router.push('/history')},
-  {label:'模板管理',key:'⌘T',action:()=>router.push('/templates')},
-  {label:'切换主题',key:'⌘D',action:()=>toggleTheme()},
+  {label:'新建采购文件',key:'Ctrl+N',action:()=>router.push('/generate')},
+  {label:'AI 顾问',key:'Ctrl+1',action:()=>router.push('/chat')},
+  {label:'文档润色',key:'Ctrl+2',action:()=>router.push('/polish')},
+  {label:'数据分析',key:'Ctrl+3',action:()=>router.push('/analytics')},
+  {label:'知识库',key:'Ctrl+4',action:()=>router.push('/knowledge')},
+  {label:'流程导览',key:'Ctrl+5',action:()=>router.push('/guide')},
+  {label:'历史记录',key:'Ctrl+H',action:()=>router.push('/history')},
+  {label:'模板管理',key:'Ctrl+T',action:()=>router.push('/templates')},
+  {label:'切换主题',key:'Ctrl+D',action:()=>toggleTheme()},
 ]
 const fc=computed(()=>cq.value?all.filter(c=>c.label.includes(cq.value)):all)
 function goC(){if(fc.value[0])doC(fc.value[0])}
@@ -100,7 +97,7 @@ onUnmounted(()=>window.removeEventListener('keydown',onKey))
 
 <style>
 /* ══════════════════════════════════════
-   Design System — Content-First
+   Design System �?Content-First
    Typography | Space | Light | Motion
    ══════════════════════════════════════ */
 :root {
@@ -143,21 +140,41 @@ onUnmounted(()=>window.removeEventListener('keydown',onKey))
 *{margin:0;padding:0;box-sizing:border-box}
 html{font-family:var(--font);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;overflow-y:scroll}
 body{background:var(--bg);color:var(--text);overflow:hidden}
-.root{display:flex;flex-direction:column;height:100vh;overflow-y:auto;overflow-x:hidden;position:relative;z-index:1;scrollbar-gutter:stable}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  background:
+    radial-gradient(ellipse 80% 50% at 20% 10%,rgba(43,138,255,.06),transparent),
+    radial-gradient(ellipse 60% 40% at 80% 80%,rgba(124,58,237,.04),transparent),
+    radial-gradient(ellipse 50% 50% at 50% 50%,rgba(43,138,255,.03),transparent);
+  animation:bgShift 15s ease-in-out infinite alternate;
+}
+@keyframes bgShift{0%{opacity:.4;transform:scale(1)}50%{opacity:.6;transform:scale(1.05)}100%{opacity:.4;transform:scale(1)}}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.03'/%3E%3C/svg%3E");
+  opacity:.4;
+}
+.root{display:flex;flex-direction:column;height:100vh;overflow-y:auto;overflow-x:hidden;position:relative;z-index:1;scrollbar-gutter:stable;scroll-behavior:smooth}
 
 /* ── Navigation ── */
 .nav{position:sticky;top:0;z-index:100;transition:all 0.4s var(--ease)}
+.nav.hidden{opacity:0;pointer-events:none}
 .nav-inner{
   display:flex;align-items:center;max-width:1440px;margin:0 auto;
   padding:16px 40px;gap:48px;
 }
 .nav.scrolled .nav-inner{
-  background:var(--bg-glass);backdrop-filter:blur(24px) saturate(180%);
-  -webkit-backdrop-filter:blur(24px) saturate(180%);
+  background:var(--bg-glass);backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
   border-bottom:0.5px solid var(--border-glass);
   box-shadow:0 1px 0 rgba(0,0,0,0.03);
 }
-.dark .nav.scrolled .nav-inner{box-shadow:0 1px 0 rgba(255,255,255,0.03)}
+.nav.scrolled::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),var(--accent-ghost),transparent);
+  opacity:0;transition:opacity .5s var(--ease);
+}
+.nav.scrolled:hover::after{opacity:.6}
 
 .nav-brand{display:flex;align-items:center;color:var(--text);text-decoration:none;flex-shrink:0}
 .nav-menu{display:flex;align-items:center;gap:4px;flex:1;justify-content:center}
@@ -174,19 +191,21 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
 }
 .nav-link:hover{background:var(--accent-ghost);color:var(--text)}
 .nav-link.active{color:var(--text)}
-.nav-link.active::after{width:16px}
+.nav-link.active::after{width:18px}
 .nav-actions{display:flex;align-items:center;gap:12px;flex-shrink:0;margin-left:auto}
 .nav-icon-btn{
   background:none;border:none;color:var(--text-secondary);cursor:pointer;
-  padding:8px;border-radius:100px;transition:all 0.25s var(--ease);display:flex;
+  padding:8px;border-radius:100px;transition:all .25s var(--ease);display:flex;
 }
-.nav-icon-btn:hover{background:var(--accent-ghost);color:var(--text)}
+.nav-icon-btn:hover{background:var(--accent-ghost);color:var(--text);transform:scale(1.08)}
+.nav-icon-btn:active{transform:scale(.94)}
 .nav-cta{
   padding:9px 24px;border-radius:100px;background:var(--accent);color:#fff;
-  text-decoration:none;font-size:14px;font-weight:550;letter-spacing:-0.2px;
-  transition:all 0.25s var(--ease);
+  text-decoration:none;font-size:14px;font-weight:550;letter-spacing:-.2px;
+  transition:all .25s var(--ease);
 }
-.nav-cta:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 16px rgba(0,80,224,0.25)}
+.nav-cta:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,80,224,.25)}
+.nav-cta:active{transform:scale(.96)}
 
 /* ── Main ── */
 .main{flex:1}
@@ -197,19 +216,33 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
 .page-enter-from{opacity:0;transform:translateY(12px)}
 .page-leave-to{opacity:0;transform:translateY(-8px)}
 
-/* Splash → App transition */
-.app-enter-enter-active{transition:all 0.6s var(--ease)}
-.app-enter-enter-from{opacity:0}
-.app-enter-enter-from .nav{transform:translateY(-16px)}
 
 /* ── Shared primitives ── */
 .glass-card{
-  background:var(--bg-elevated);backdrop-filter:blur(20px) saturate(150%);
-  -webkit-backdrop-filter:blur(20px) saturate(150%);
+  background:var(--bg-elevated);backdrop-filter:blur(28px) saturate(200%);
+  -webkit-backdrop-filter:blur(28px) saturate(200%);
   border:0.5px solid var(--border-glass);border-radius:var(--radius);
-  box-shadow:0 1px 0 rgba(0,0,0,0.03);transition:box-shadow 0.35s var(--ease);
+  box-shadow:0 1px 0 rgba(255,255,255,.05) inset,0 2px 8px rgba(0,0,0,.04),0 8px 32px rgba(0,0,0,.05);
+  transition:all .45s var(--ease);
+  position:relative;overflow:hidden;
 }
-.glass-card:hover{box-shadow:var(--shadow-md)}
+.dark .glass-card{box-shadow:0 1px 0 rgba(255,255,255,.02) inset,0 2px 8px rgba(0,0,0,.3),0 8px 32px rgba(0,0,0,.4)}
+.glass-card::before{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(ellipse at 50% 0%,rgba(43,138,255,.08),transparent 70%);
+  opacity:0;transition:opacity .5s var(--ease);z-index:0;pointer-events:none;
+}
+.glass-card::after{
+  content:'';position:absolute;top:0;left:-100%;width:60%;height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.04),transparent);
+  transform:skewX(-20deg);transition:left .8s var(--ease);z-index:0;pointer-events:none;
+}
+.glass-card:hover::before{opacity:1}
+.glass-card:hover::after{left:120%}
+.glass-card:hover{
+  box-shadow:0 1px 0 rgba(255,255,255,.08) inset,0 4px 16px rgba(0,0,0,.06),0 12px 40px rgba(0,0,0,.08);
+  transform:translateY(-3px);
+}
 
 .surface-card{background:var(--bg);border-radius:var(--radius);padding:32px}
 
@@ -221,6 +254,7 @@ body{background:var(--bg);color:var(--text);overflow:hidden}
   transition:all 0.3s var(--ease);text-decoration:none;
 }
 .btn-primary:hover{background:var(--accent-hover);transform:translateY(-1px);box-shadow:0 8px 24px rgba(0,80,224,0.2)}
+.btn-primary:active{transform:scale(0.96)}
 .btn-primary:active{transform:scale(0.97)}
 .btn-primary:disabled{opacity:0.3;pointer-events:none}
 

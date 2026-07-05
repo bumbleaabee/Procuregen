@@ -1,6 +1,6 @@
 <template>
   <div class="kb">
-    <h2 class="page-title">采购知识库</h2>
+    <h2 class="page-title"><span class="grad">采购知识库</span></h2>
     <div class="kb-search">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/><path d="M21 21l-4.35-4.35" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
       <input v-model="search" class="kb-input" placeholder="搜索采购法规、流程、术语..." @input="doSearch" />
@@ -83,29 +83,30 @@ function doSearch() {}
 
 <style scoped>
 .kb { max-width: 900px; margin: 0 auto; }
-.page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 20px; }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 20px; }
+.grad{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 
 .kb-search { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 16px; color: var(--text-tertiary); }
-.kb-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font); background: transparent; color: var(--text-primary); }
+.kb-input { flex: 1; border: none; outline: none; font-size: 15px; font-family: var(--font); background: transparent; color: var(--text); }
 .kb-input::placeholder { color: var(--text-tertiary); }
 
 .kb-cats { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
-.cat-chip { padding: 7px 16px; border-radius: 100px; border: 0.5px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer; transition: all var(--transition); font-family: var(--font); }
+.cat-chip { padding: 7px 16px; border-radius: 100px; border: 0.5px solid var(--border); background: transparent; color: var(--text-secondary); font-size: 13px; cursor: pointer; transition: all var(--ease); font-family: var(--font); }
 .cat-chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
 .cat-chip:hover:not(.active) { border-color: var(--accent); color: var(--accent); }
 
 .kb-list { display: flex; flex-direction: column; gap: 10px; }
-.kb-card { padding: 18px 22px; cursor: pointer; transition: all var(--transition); }
+.kb-card { padding: 18px 22px; cursor: pointer; transition: all var(--ease); }
 .kb-card:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
 .kb-cat-tag { font-size: 11px; font-weight: 550; color: var(--accent); text-transform: uppercase; letter-spacing: 0.5px; }
-.kb-card h4 { font-size: 15px; font-weight: 600; margin-top: 6px; color: var(--text-primary); }
+.kb-card h4 { font-size: 15px; font-weight: 600; margin-top: 6px; color: var(--text); }
 
 .kb-body { margin-top: 14px; padding-top: 14px; border-top: 0.5px solid var(--border); }
 .kb-content { font-size: 14px; line-height: 1.8; color: var(--text-secondary); }
 .kb-content :deep(p) { margin-bottom: 10px; }
 .kb-content :deep(ul), .kb-content :deep(ol) { padding-left: 20px; margin-bottom: 10px; }
 .kb-content :deep(li) { margin-bottom: 4px; }
-.kb-content :deep(strong) { color: var(--text-primary); }
+.kb-content :deep(strong) { color: var(--text); }
 .kb-tags { display: flex; gap: 6px; margin-top: 12px; }
 .kb-tag { font-size: 11px; color: var(--accent); }
 

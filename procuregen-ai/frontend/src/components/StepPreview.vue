@@ -82,10 +82,10 @@ async function copyPreview() {
 .step-head p { font-size: 14px; color: var(--text-secondary); margin-top: 4px; word-break: break-all; }
 .section { margin-bottom: 24px; }
 .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
-.section-title { font-size: 15px; font-weight: 600; color: var(--text-primary); margin-bottom: 0; }
+.section-title { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 0; }
 .copy-btn { font-size: 12px; padding: 5px 12px; }
 .clause-card { padding: 14px 16px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; }
-.clause-card h4 { font-size: 14px; font-weight: 550; color: var(--text-primary); margin-bottom: 4px; }
+.clause-card h4 { font-size: 14px; font-weight: 550; color: var(--text); margin-bottom: 4px; }
 .clause-text { font-size: 13px; color: var(--text-secondary); line-height: 1.6; white-space: pre-wrap; }
 .clause-reason { font-size: 12px; color: var(--accent); margin-top: 6px; }
 .preview-box { white-space: pre-wrap; font-size: 13px; line-height: 1.8; color: var(--text-secondary); max-height: 360px; overflow-y: auto; background: rgba(128,128,128,0.04); padding: 16px; border-radius: var(--radius-sm); border: 0.5px solid var(--border); }

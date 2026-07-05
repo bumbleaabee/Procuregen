@@ -60,7 +60,7 @@ const radarData = computed(() => {
 .badge-high { background: #ff3b3020; color: #ff3b30; }
 .badge-medium { background: #f5a62320; color: #b87a14; }
 .badge-low { background: #34c75920; color: #34c759; }
-.risk-type { font-weight: 550; color: var(--text-primary); }
+.risk-type { font-weight: 550; color: var(--text); }
 .risk-msg { font-size: 13px; color: var(--text-secondary); line-height: 1.6; }
 .risk-sug { font-size: 13px; color: var(--accent); margin-top: 6px; line-height: 1.6; }
 .empty-state { text-align: center; padding: 40px 0; color: var(--text-tertiary); }

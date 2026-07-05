@@ -51,14 +51,14 @@ function fillSample(type) { store.inputText = samples[type] || samples.server }
 </script>
 
 <style scoped>
-.step-head h2 { font-size: 24px; font-weight: 650; letter-spacing: -0.5px; color: var(--text-primary); }
+.step-head h2 { font-size: 24px; font-weight: 650; letter-spacing: -0.5px; color: var(--text); }
 .step-head p { font-size: 15px; color: var(--text-secondary); margin-top: 6px; }
 .step-head { text-align: center; margin-bottom: 28px; }
 .char-count { text-align: right; font-size: 12px; color: var(--text-tertiary); margin-top: 6px; }
 .step-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
 
 /* Streaming preview */
-.stream-preview { margin-top: 20px; padding: 16px; border-radius: var(--radius); border: 0.5px solid var(--border); background: var(--accent-light); }
+.stream-preview { margin-top: 20px; padding: 16px; border-radius: var(--radius); border: 0.5px solid var(--border); background: var(--accent-ghost); }
 .stream-header { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--accent); margin-bottom: 8px; }
 .stream-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: pulse 1.2s ease-in-out infinite; }
 .stream-content { font-size: 14px; color: var(--text-secondary); line-height: 1.7; white-space: pre-wrap; font-family: 'SF Mono', 'Cascadia Code', 'Consolas', monospace; max-height: 300px; overflow-y: auto; }
@@ -70,7 +70,7 @@ function fillSample(type) { store.inputText = samples[type] || samples.server }
 .samples { margin-top: 32px; padding-top: 24px; border-top: 0.5px solid var(--border); }
 .samples-title { font-size: 13px; font-weight: 550; color: var(--text-secondary); margin-bottom: 10px; }
 .sample-list { display: flex; gap: 8px; }
-.sample-chip { padding: 8px 16px; border-radius: 100px; border: 0.5px solid var(--border); background: var(--accent-light); font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all var(--transition); font-family: var(--font); }
+.sample-chip { padding: 8px 16px; border-radius: 100px; border: 0.5px solid var(--border); background: var(--accent-ghost); font-size: 13px; color: var(--text-secondary); cursor: pointer; transition: all var(--ease); font-family: var(--font); }
 .sample-chip:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }

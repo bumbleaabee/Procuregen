@@ -2,7 +2,7 @@
   <div class="history-page">
     <div class="apple-card" style="padding:24px;">
       <div class="page-header">
-        <h2 class="page-title">历史记录</h2>
+        <h2 class="page-title"><span class="grad">历史记录</span></h2>
         <div class="header-actions">
           <el-input v-model="keyword" placeholder="搜索项目名称..." clearable style="width: 240px;" @clear="fetchTasks()" @keyup.enter="fetchTasks()" />
           <router-link to="/generate" class="apple-btn apple-btn-primary" style="font-size:13px;padding:8px 16px;">
@@ -151,9 +151,10 @@ function levelLabel(level) {
 <style scoped>
 .history-page { max-width: 1100px; margin: 0 auto; }
 .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.page-title { font-size: 24px; font-weight: 650; letter-spacing: -0.5px; }
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 20px; }
+.grad{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .header-actions { display: flex; gap: 10px; align-items: center; }
-.project-name { font-weight: 520; color: var(--text-primary); }
+.project-name { font-weight: 520; color: var(--text); }
 .pagination-wrap { display: flex; justify-content: center; margin-top: 20px; }
 .detail-text { max-height: 200px; overflow-y: auto; white-space: pre-wrap; color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
 </style>

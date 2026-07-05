@@ -42,7 +42,7 @@ const shortcuts = [
 .help-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .help-header h3 { font-size: 17px; font-weight: 650; }
 .help-close { background: none; border: none; cursor: pointer; color: var(--text-tertiary); padding: 4px; border-radius: 6px; }
-.help-close:hover { background: var(--accent-light); color: var(--text-primary); }
+.help-close:hover { background: var(--accent-ghost); color: var(--text); }
 .help-grid { display: flex; flex-direction: column; gap: 8px; }
 .help-row { display: flex; align-items: center; gap: 14px; padding: 8px 0; }
 .help-row kbd { min-width: 80px; text-align: center; }

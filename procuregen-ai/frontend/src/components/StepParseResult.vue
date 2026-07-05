@@ -63,7 +63,7 @@ function addTag(key, e) {
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field label { font-size: 12px; font-weight: 550; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.3px; }
 .tags-wrap { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-height: 42px; padding: 6px 8px; border: 0.5px solid var(--border); border-radius: var(--radius-sm); background: rgba(0,0,0,0.01); }
-.tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: var(--accent-light); color: var(--accent); border-radius: 100px; font-size: 12px; font-weight: 500; }
+.tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 10px; background: var(--accent-ghost); color: var(--accent); border-radius: 100px; font-size: 12px; font-weight: 500; }
 .tag button { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; margin-left: 2px; }
 .tag-input { border: none; outline: none; font-size: 13px; font-family: var(--font); padding: 4px; min-width: 120px; background: transparent; }
 .step-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 28px; }

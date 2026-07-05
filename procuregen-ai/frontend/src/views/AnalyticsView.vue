@@ -1,6 +1,9 @@
 <template>
   <div class="analytics">
-    <h2 class="page-title">数据分析</h2>
+    <div class="page-hero">
+      <p class="hero-eyebrow">DATA INSIGHTS</p>
+      <h2 class="page-title">数据分析<span class="grad">仪表盘</span></h2>
+    </div>
 
     <div class="stats-row">
       <div class="apple-card stat-big" v-for="s in bigStats" :key="s.label">
@@ -117,7 +120,10 @@ onMounted(async () => {
 
 <style scoped>
 .analytics { max-width: 1000px; margin: 0 auto; }
-.page-title { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 24px; }
+.page-hero{margin-bottom:28px}
+.hero-eyebrow{font-size:13px;font-weight:550;letter-spacing:2px;color:var(--accent);margin-bottom:8px;text-transform:uppercase}
+.page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 24px; }
+.grad{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
 .stat-big { text-align: center; padding: 24px 16px; }
 .big-value { font-size: 36px; font-weight: 750; letter-spacing: -1px; }
@@ -132,7 +138,7 @@ onMounted(async () => {
 .bar-label { font-size: 13px; color: var(--text-secondary); width: 60px; text-align: right; }
 .bar-track { flex: 1; height: 10px; background: var(--border); border-radius: 5px; overflow: hidden; }
 .bar-fill { height: 100%; border-radius: 5px; transition: width 1s ease; }
-.bar-val { font-size: 13px; font-weight: 600; color: var(--text-primary); width: 30px; }
+.bar-val { font-size: 13px; font-weight: 600; color: var(--text); width: 30px; }
 
 .trend-chart { display: flex; align-items: flex-end; gap: 8px; height: 160px; padding: 0 4px; }
 .trend-bar {
@@ -150,7 +156,7 @@ onMounted(async () => {
 .dot-medium { background: #f5a623; }
 .dot-low { background: #34c759; }
 .act-info { flex: 1; }
-.act-name { font-size: 14px; font-weight: 520; color: var(--text-primary); }
+.act-name { font-size: 14px; font-weight: 520; color: var(--text); }
 .act-time { font-size: 12px; color: var(--text-tertiary); margin-top: 2px; }
 .act-badge { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 100px; }
 .badge-high { background: #ff3b3020; color: #ff3b30; }

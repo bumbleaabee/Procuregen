@@ -1,6 +1,6 @@
 <template>
   <div class="guide-root">
-    <h2 class="g-title">采购流程导览</h2>
+    <h2 class="g-title"><span class="grad">采购流程导览</span></h2>
     <p class="g-sub">点击每个步骤查看详细说明与专业建议</p>
 
     <div class="timeline">
@@ -89,7 +89,8 @@ function nextStep(i) {
 
 <style scoped>
 .guide-root { max-width: 760px; margin: 0 auto; }
-.g-title { font-size: 26px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 4px; }
+.g-title { font-size: 28px; font-weight: 700; letter-spacing: -0.8px; margin-bottom: 4px; }
+.grad{background:linear-gradient(135deg,var(--accent),#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .g-sub { font-size: 14px; color: var(--text-secondary); margin-bottom: 32px; }
 
 .timeline { position: relative; padding-left: 44px; }
@@ -100,28 +101,28 @@ function nextStep(i) {
 .tl-dot {
   width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
   background: var(--border); color: var(--text-tertiary); font-size: 12px; font-weight: 650;
-  transition: all var(--transition); z-index: 1; flex-shrink: 0;
+  transition: all var(--ease); z-index: 1; flex-shrink: 0;
 }
 .tl-dot.done { background: var(--accent); color: #fff; }
-.tl-line { width: 2px; flex: 1; min-height: 40px; background: var(--border); margin: 4px 0; transition: background var(--transition); }
+.tl-line { width: 2px; flex: 1; min-height: 40px; background: var(--border); margin: 4px 0; transition: background var(--ease); }
 .tl-line.filled { background: var(--accent); }
 
 .tl-card {
   background: var(--bg-card); border: 0.5px solid var(--border); border-radius: var(--radius-lg);
-  padding: 20px 24px; cursor: pointer; transition: all var(--transition);
+  padding: 20px 24px; cursor: pointer; transition: all var(--ease);
 }
 .tl-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
 .tl-card.done { border-left: 3px solid var(--accent); }
 
 .tl-header { display: flex; align-items: center; gap: 10px; }
 .tl-num { font-size: 11px; font-weight: 600; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; }
-.tl-header h3 { font-size: 16px; font-weight: 650; color: var(--text-primary); }
+.tl-header h3 { font-size: 16px; font-weight: 650; color: var(--text); }
 .tl-check { margin-left: auto; color: #34c759; font-weight: 700; }
 .tl-brief { font-size: 14px; color: var(--text-secondary); margin-top: 8px; line-height: 1.6; }
 
 .tl-detail { margin-top: 18px; padding-top: 18px; border-top: 0.5px solid var(--border); }
 .tl-section { margin-bottom: 16px; }
-.tl-section h4 { font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 8px; }
+.tl-section h4 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 8px; }
 .tl-section ul { padding-left: 18px; }
 .tl-section li { font-size: 13px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 4px; }
 .tl-section p { font-size: 13px; color: var(--text-secondary); line-height: 1.7; }
